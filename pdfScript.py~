@@ -1,0 +1,49 @@
+#!/usr/bin/python
+
+import PyPDF2
+import textract
+import os
+import sys
+from nltk.tokenize import word_tokenize
+from nltk.corpus import stopwords
+
+files = []
+for filename in os.listdir("/Users/ShMac/Desktop"):
+  if filename.endswith(".pdf"):
+    #print(filename)
+    files.append(filename)
+    #print(files)
+
+user_input = raw_input("Search: ")
+
+for entry in files:
+  pdfFileObj = open(entry, 'rb')
+  pdfReader = PyPDF2.PdfFileReader(pdfFileObj)
+  #print(pdfReader.numPages)
+  num_pages = pdfReader.numPages
+  count = 0
+  text = ""
+
+  while count < num_pages:
+    pageObj = pdfReader.getPage(count)
+    count += 1
+    text += pageObj.extractText()
+
+  if text != "":
+    text = text
+  else:
+    text = textract.process('Jyoti Mody-Appetizer-Paneer Empanadas.pdf', method='pdftotext', language='eng')
+
+#print(text)
+
+#pageObj = pdfReader.getPage(0)
+#print(pageObj.extractText())
+
+#  user_input = raw_input("Search: ")
+  for word in user_input.split():
+    if word in text:
+      print(entry)
+    else:
+      print("Word not found")
+
+  pdfFileObj.close()
